@@ -10,13 +10,17 @@ var game = new Phaser.Game(1280, 720, Phaser.CANVAS, '', { preload: preload, cre
 
 function preload() {
 	game.load.image('sky', 'assets/sky.png');
-    game.load.image('ground', 'assets/platform.png');
+	game.load.image('ground', 'assets/ground.png');
+    game.load.image('platform', 'assets/platform.png');
     game.load.image('star', 'assets/star.png');
-    game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
+    // game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
+    game.load.spritesheet('dude', 'assets/hero.png', 32, 32);
+    game.load.image('sign', 'assets/sign.png');
 }
 
 var platforms;
 var player;
+var uiMessage;
 
 function create() {
 	game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -30,15 +34,15 @@ function create() {
 
 	var ground = platforms.create(0, game.world.height - 64, 'ground');
 
-	ground.scale.setTo(4, 2);
+	ground.scale.setTo(15, 1);
 
 	ground.body.immovable = true;
 
-	var ledge = platforms.create(400, 500, 'ground');
+	var ledge = platforms.create(400, 500, 'platform');
 
 	ledge.body.immovable = true;
 
-	ledge = platforms.create(-150, 350, 'ground');
+	ledge = platforms.create(-150, 350, 'platform');
 
 	ledge.body.immovable = true;
 
@@ -51,11 +55,18 @@ function create() {
 	player.body.gravity.y = 400;
 	player.body.collideWorldBounds = true;
 
-	player.animations.add('left', [0, 1, 2, 3], 10, true);
-	player.animations.add('right', [5, 6, 7, 8], 10, true);
+	// player.animations.add('left', [0, 1, 2, 3], 10, true);
+	// player.animations.add('right', [5, 6, 7, 8], 10, true);
 
+	player.animations.add('left', [7, 8, 9, 10], 10, true);
+	player.animations.add('right', [8, 9, 10, 11], 10, true);
+	player.animations.add('idle', [0, 1, 2, 3], 10, true);
 
+	uiMessage = game.add.sprite(537, 280, 'sign');
+	uiMessage.visible = false;
 }
+
+var isJumping = false
 
 function update() {
 	var hitPlatform = game.physics.arcade.collide(player, platforms);
@@ -74,15 +85,26 @@ function update() {
 
 			player.animations.play('right');
 		} else {
+			if (!isJumping) {
+				// player.animations.stop();
+				// player.frame = 4;
 
-			player.animations.stop();
-
-			player.frame = 4;
+				player.animations.play('idle');
+			};
 		};
 
 		if (gp.buttons[0].pressed && player.body.touching.down && hitPlatform) {
+			isJumping = true;
 			player.body.velocity.y = -400;
+		} else if (player.body.touching.down && hitPlatform) {
+			isJumping = false;
+		};
+
+		if (player.x >= 600) {
+			uiMessage.visible = true;
+		} else {
+			uiMessage.visible = false;
 		}
-	}
+	};
 	
 }
