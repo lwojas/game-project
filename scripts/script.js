@@ -44,7 +44,7 @@ var input = {
                 gp = navigator.getGamepads()[0];
                 $("#gamepadPrompt").html("Gamepad connected!");
                 console.log("connection event");
-                repGP = window.setInterval(checkGamepad,12);
+                repGP = window.setInterval(checkGamepad,1);
             });
  
             $(window).on("gamepaddisconnected", function() {
@@ -65,7 +65,7 @@ var input = {
             function checkGamepad() {
             		// console.log('this function has fired');
 					gp = navigator.getGamepads()[0];
-					var axeLF = gp.axes[0];
+					/*var axeLF = gp.axes[0];
                     // console.log(gp);
 					if(axeLF < -0.5) {
 						input.left = true;
@@ -78,7 +78,7 @@ var input = {
 					} else {
 						input.left = false;
 						input.right = false;
-					}
+					}*/
 			}
         }
  

@@ -6,7 +6,7 @@ $(document).ready(function() {
 });
 
 
-var game = new Phaser.Game(1280, 720, Phaser.AUTO, '', { preload: preload, create: create, update: update });
+var game = new Phaser.Game(1280, 720, Phaser.CANVAS, '', { preload: preload, create: create, update: update });
 
 function preload() {
 	game.load.image('sky', 'assets/sky.png');
@@ -34,11 +34,11 @@ function create() {
 
 	ground.body.immovable = true;
 
-	var ledge = platforms.create(400, 400, 'ground');
+	var ledge = platforms.create(400, 500, 'ground');
 
 	ledge.body.immovable = true;
 
-	ledge = platforms.create(-150, 250, 'ground');
+	ledge = platforms.create(-150, 350, 'ground');
 
 	ledge.body.immovable = true;
 
@@ -47,8 +47,8 @@ function create() {
 
 	game.physics.arcade.enable(player);
 
-	player.body.bounce.y = 0.2;
-	player.body.gravity.y = 300;
+	player.body.bounce.y = 0;
+	player.body.gravity.y = 400;
 	player.body.collideWorldBounds = true;
 
 	player.animations.add('left', [0, 1, 2, 3], 10, true);
@@ -64,13 +64,13 @@ function update() {
 	if (hasGP) {
 		if (gp.buttons[14].pressed) {
 			
-			player.body.velocity.x = -150;
+			player.body.velocity.x = -250;
 
 			player.animations.play('left');
 
 		} else if (gp.buttons[15].pressed) {
 			
-			player.body.velocity.x = 150;
+			player.body.velocity.x = 250;
 
 			player.animations.play('right');
 		} else {
@@ -81,7 +81,7 @@ function update() {
 		};
 
 		if (gp.buttons[0].pressed && player.body.touching.down && hitPlatform) {
-			player.body.velocity.y = -350;
+			player.body.velocity.y = -400;
 		}
 	}
 	
