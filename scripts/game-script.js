@@ -1,8 +1,32 @@
 $(document).ready(function() {
 	
 	setTimeout(function() { 
-		console.log(gp);
-	}, 500);
+		window.countFPS = (function () {
+			var lastLoop = (new Date()).getMilliseconds();
+			var count = 1;
+			var fps = 0;
+
+		return function () {
+		    var currentLoop = (new Date()).getMilliseconds();
+		    if (lastLoop > currentLoop) {
+		 	    fps = count;
+		    	count = 1;
+		    } else {
+		      	count += 1;
+		    }
+		    lastLoop = currentLoop;
+		    scoreText.text = 'FPS ' + fps;
+		    return fps;
+			};
+	}());
+
+	(function loop() {
+	    requestAnimationFrame(function () {
+	      countFPS();
+	      loop();
+	    });
+	}());
+		}, 500);
 });
 
 
@@ -11,7 +35,7 @@ var game = new Phaser.Game(1280, 720, Phaser.CANVAS, '', { preload: preload, cre
 function preload() {
 	game.load.image('sky', 'assets/sky.png');
 	game.load.image('ground', 'assets/ground.png');
-    game.load.image('platform', 'assets/platform.png');
+    game.load.image('platform', 'assets/platform2.png');
     game.load.image('star', 'assets/star.png');
     // game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
     game.load.spritesheet('dude', 'assets/hero.png', 32, 32);
@@ -21,6 +45,7 @@ function preload() {
 var platforms;
 var player;
 var uiMessage;
+var scoreText;
 
 function create() {
 	game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -64,6 +89,8 @@ function create() {
 
 	uiMessage = game.add.sprite(537, 280, 'sign');
 	uiMessage.visible = false;
+
+	scoreText = game.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#FFF' });
 }
 
 var isJumping = false
@@ -108,3 +135,5 @@ function update() {
 	};
 	
 }
+
+
